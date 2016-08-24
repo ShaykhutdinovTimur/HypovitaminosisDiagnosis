@@ -29,11 +29,11 @@ public class BaseProvider {
                 }
                 String dir = "data/" + name + "/";
                 imageProvider.setSourceDir(dir);
-                cvsBaseAdaptor.setHeaderCount(10001);
+                cvsBaseAdaptor.setHeaderCount(6);
                 cvsBaseAdaptor.setWriter(new FileWriter(name + "Base.csv"));
                 imageProvider.ready();
                 cvsBaseAdaptor.ready();
-                String[] header = imageProcessor.getHeaderB();
+                String[] header = imageProcessor.getHeaderMono();
                 for (int i = 0; i < header.length; i++) {
                     cvsBaseAdaptor.append(header[i]);
                 }
@@ -41,10 +41,10 @@ public class BaseProvider {
                 for (int i = 0; i < count; i++) {
                     imageProvider.next();
                     double x = imageProvider.getCharacteristics();
-                    int[] pix = imageProcessor.processB(imageProvider.getImage());
-                    cvsBaseAdaptor.append(x);
-                    for (int j = 0; j < 10000; j++) {
-                        cvsBaseAdaptor.append(pix[j]);
+                    double[] pix = imageProcessor.processMono(imageProvider.getImage());
+                    cvsBaseAdaptor.append2(x);
+                    for (int j = 0; j < pix.length; j++) {
+                        cvsBaseAdaptor.append2(pix[j]);
                     }
                 }
                 imageProvider.finish();

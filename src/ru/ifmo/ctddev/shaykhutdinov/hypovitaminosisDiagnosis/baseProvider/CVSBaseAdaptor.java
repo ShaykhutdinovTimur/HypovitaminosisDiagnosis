@@ -36,6 +36,19 @@ public class CVSBaseAdaptor {
         cur = 0;
     }
 
+    public void append2(double a) {
+        try {
+            cur = (cur + 1) % headerCount;
+            if (cur != 0) {
+                writer.write(a + ",");
+            } else {
+                writer.write(a + "\n");
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     public void append(Object a) {
         try {
             cur = (cur + 1) % headerCount;

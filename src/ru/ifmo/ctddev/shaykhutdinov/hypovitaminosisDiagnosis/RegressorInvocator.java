@@ -1,15 +1,13 @@
 package ru.ifmo.ctddev.shaykhutdinov.hypovitaminosisDiagnosis;
 
-import weka.classifiers.meta.AdditiveRegression;
-import weka.core.Attribute;
-import weka.core.DenseInstance;
-import weka.core.Instance;
+import weka.classifiers.functions.SMOreg;
+import weka.classifiers.functions.supportVector.PolyKernel;
+import weka.classifiers.functions.supportVector.RegSMOImproved;
 import weka.core.Instances;
 import weka.core.converters.CSVLoader;
 
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.util.ArrayList;
 
 /**
  * Created by timur
@@ -22,7 +20,8 @@ public class RegressorInvocator {
         new RegressorInvocator().run();
     }
 
-    AdditiveRegression regression;
+
+    SMOreg regression;
     CSVLoader loader;
     Instances i;
 
@@ -33,7 +32,9 @@ public class RegressorInvocator {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        regression = new AdditiveRegression();
+        regression = new SMOreg();
+        regression.setKernel(new PolyKernel());
+        regression.setRegOptimizer(new RegSMOImproved());
         try {
             i = loader.getDataSet();
             i.setClassIndex(0);
