@@ -13,8 +13,6 @@ import java.io.IOException;
  * Created by timur
  */
 public class RegressorInvocator {
-    public RegressorInvocator() {
-    }
 
     public static void main(String[] args) {
         new RegressorInvocator().run();
@@ -28,7 +26,7 @@ public class RegressorInvocator {
     public void run() {
         loader = new CSVLoader();
         try {
-            loader.setSource(new FileInputStream("fissureBase.csv"));
+            loader.setSource(getClass().getClassLoader().getResourceAsStream("fissureBase.csv"));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -39,7 +37,6 @@ public class RegressorInvocator {
             i = loader.getDataSet();
             i.setClassIndex(0);
             regression.buildClassifier(i);
-
         } catch (Exception e) {
             e.printStackTrace();
         }
