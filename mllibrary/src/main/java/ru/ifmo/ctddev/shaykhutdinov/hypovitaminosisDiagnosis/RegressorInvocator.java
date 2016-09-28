@@ -6,7 +6,6 @@ import weka.classifiers.functions.supportVector.RegSMOImproved;
 import weka.core.Instances;
 import weka.core.converters.CSVLoader;
 
-import java.io.FileInputStream;
 import java.io.IOException;
 
 /**
