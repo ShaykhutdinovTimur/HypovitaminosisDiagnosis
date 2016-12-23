@@ -143,6 +143,7 @@ public class ImageProcessor {
         return ((int)( r * 0.5 + g * 0.4 + b * 0.1));
     }
 
+
     public static void main(String[] args) {
         try {
             BufferedImage image = ImageIO.read(new File("data/fissure/52.jpg"));

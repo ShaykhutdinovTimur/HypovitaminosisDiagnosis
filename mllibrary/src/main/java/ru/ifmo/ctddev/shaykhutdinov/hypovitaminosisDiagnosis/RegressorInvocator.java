@@ -11,19 +11,12 @@ import java.io.IOException;
 /**
  * Created by timur
  */
-public class RegressorInvocator {
-
-    public static void main(String[] args) {
-        new RegressorInvocator().run();
-    }
-
-
+class RegressorInvocator {
     SMOreg regression;
-    CSVLoader loader;
     Instances i;
 
-    public void run() {
-        loader = new CSVLoader();
+    RegressorInvocator() {
+        CSVLoader loader = new CSVLoader();
         try {
             loader.setSource(getClass().getClassLoader().getResourceAsStream("fissureBase.csv"));
         } catch (IOException e) {

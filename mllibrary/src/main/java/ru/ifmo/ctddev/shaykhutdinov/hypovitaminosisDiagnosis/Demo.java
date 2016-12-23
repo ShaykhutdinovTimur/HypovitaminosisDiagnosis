@@ -72,7 +72,6 @@ public class Demo extends JPanel
         add(logScrollPane, BorderLayout.CENTER);
 
         reg = new RegressorInvocator();
-        reg.run();
     }
 
     public void actionPerformed(ActionEvent e) {

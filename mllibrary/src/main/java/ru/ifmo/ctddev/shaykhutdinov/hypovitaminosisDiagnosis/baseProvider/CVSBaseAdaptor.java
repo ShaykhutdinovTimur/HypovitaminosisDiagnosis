@@ -6,12 +6,12 @@ import java.io.IOException;
 /**
  * Created by timur
  */
-public class CVSBaseAdaptor {
+class CVSBaseAdaptor {
     private FileWriter writer;
     private int headerCount;
     private int cur;
 
-    public void setWriter(FileWriter writer) {
+    void setWriter(FileWriter writer) {
         this.writer = writer;
     }
 
@@ -23,11 +23,11 @@ public class CVSBaseAdaptor {
         return headerCount;
     }
 
-    public void setHeaderCount(int headerCount) {
+    void setHeaderCount(int headerCount) {
         this.headerCount = headerCount;
     }
 
-    public CVSBaseAdaptor() {
+    CVSBaseAdaptor() {
     }
 
     public CVSBaseAdaptor(FileWriter writer, int headerCount) {
@@ -36,7 +36,7 @@ public class CVSBaseAdaptor {
         cur = 0;
     }
 
-    public void append2(double a) {
+    void append2(double a) {
         try {
             cur = (cur + 1) % headerCount;
             if (cur != 0) {
@@ -49,7 +49,7 @@ public class CVSBaseAdaptor {
         }
     }
 
-    public void append(Object a) {
+    void append(Object a) {
         try {
             cur = (cur + 1) % headerCount;
             if (cur != 0) {
@@ -62,11 +62,11 @@ public class CVSBaseAdaptor {
         }
     }
 
-    public boolean ready() {
+    boolean ready() {
         return (writer != null);
     }
 
-    public boolean finish() {
+    boolean finish() {
         try {
             writer.flush();
             writer.close();

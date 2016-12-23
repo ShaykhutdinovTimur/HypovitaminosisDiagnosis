@@ -6,17 +6,17 @@ import java.util.StringTokenizer;
 /**
  * Created by timur
  */
-public class FastReader {
-    boolean eof;
-    BufferedReader br;
-    StringTokenizer st;
-    String name;
+class FastReader {
+    private boolean eof;
+    private BufferedReader br;
+    private StringTokenizer st;
+    private String name;
 
-    public FastReader(String name) {
+    FastReader(String name) {
         this.name = name;
     }
 
-    public boolean hasNext() {
+    boolean hasNext() {
         try {
             return !eof || (st.hasMoreElements() && br.ready());
         } catch (IOException e) {
@@ -24,7 +24,7 @@ public class FastReader {
         }
     }
 
-    public String nextToken() {
+    String nextToken() {
         while (st == null || !st.hasMoreTokens()) {
             try {
                 st = new StringTokenizer(br.readLine());
@@ -36,7 +36,7 @@ public class FastReader {
         return st.nextToken();
     }
 
-    public int nextInt() {
+    int nextInt() {
         return Integer.parseInt(nextToken());
     }
 
@@ -44,7 +44,7 @@ public class FastReader {
         return Long.parseLong(nextToken());
     }
 
-    public double nextDouble() {
+    double nextDouble() {
         return Double.parseDouble(nextToken());
     }
 
@@ -52,19 +52,19 @@ public class FastReader {
         return br.readLine();
     }
 
-    public void start() throws IOException {
+    void start() throws IOException {
         InputStream input = System.in;
         try {
             File f = new File(name);
             if (f.exists() && f.canRead()) {
                 input = new FileInputStream(f);
             }
-        } catch (Throwable e) {
+        } catch (Throwable ignored) {
         }
         br = new BufferedReader(new InputStreamReader(input));
     }
 
-    public void finish() {
+    void finish() {
         try {
             br.close();
         } catch (IOException e) {

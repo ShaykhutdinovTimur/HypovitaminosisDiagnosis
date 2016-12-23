@@ -8,25 +8,25 @@ import java.io.IOException;
 /**
  * Created by timur
  */
-public class ImageProvider {
+class ImageProvider {
     private String sourceDir;
     private double characteristics;
     private BufferedImage image;
     private int cur;
-    FastReader info;
+    private FastReader info;
 
-    public double getCharacteristics() {
+    double getCharacteristics() {
         return characteristics;
     }
 
-    public BufferedImage getImage() {
+    BufferedImage getImage() {
         return image;
     }
 
-    public ImageProvider() {
+    ImageProvider() {
     }
 
-    public void setSourceDir(String sourceDir) {
+    void setSourceDir(String sourceDir) {
         this.sourceDir = sourceDir;
         this.cur = 0;
         info = new FastReader(this.sourceDir + "info.txt");
@@ -36,7 +36,7 @@ public class ImageProvider {
         setSourceDir(sourceDir);
     }
 
-    public void ready() {
+    void ready() {
         try {
             if (info != null) {
                 info.start();
@@ -46,7 +46,7 @@ public class ImageProvider {
         }
     }
 
-    public void next() {
+    void next() {
         try {
             image = ImageIO.read(new File(sourceDir + (cur + 1) + ".jpg"));
             cur++;
@@ -56,7 +56,7 @@ public class ImageProvider {
         characteristics = info.nextDouble();
     }
 
-    public void finish() {
+    void finish() {
         if (info != null) {
             info.finish();
         }
