@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+<script src="webcam.js"></script>
+
+<div id="my_camera" style="width:320px; height:240px;"></div>
+<div id="my_result"></div>
+
+<script language="JavaScript">
+        Webcam.attach( '#my_camera' );
+
+        function take_snapshot() {
+            Webcam.snap( function(data_uri) {
+                // snap complete, image data is in 'data_uri'
+
+                Webcam.upload( data_uri, '/upload', function(code, text) {
+                    // Upload complete!
+                    // 'code' will be the HTTP response code from the server, e.g. 200
+                    // 'text' will be the raw response content
+                    document.getElementById('my_result').innerHTML = text;
+                } );
+
+    } );
+    }
+
+
+</script>
+
+<a href="javascript:void(take_snapshot())">Take Snapshot</a>
+
+</body>
+</html>
