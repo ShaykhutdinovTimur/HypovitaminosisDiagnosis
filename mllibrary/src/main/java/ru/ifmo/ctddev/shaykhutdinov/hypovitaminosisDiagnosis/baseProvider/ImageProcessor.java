@@ -1,9 +1,8 @@
 package ru.ifmo.ctddev.shaykhutdinov.hypovitaminosisDiagnosis.baseProvider;
 
-import javax.imageio.ImageIO;
+import javafx.util.Pair;
+
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
 import java.util.ArrayDeque;
 import java.util.Queue;
 
@@ -11,123 +10,13 @@ import java.util.Queue;
  * Created by timur
  */
 public class ImageProcessor {
-    public static int[] processB(BufferedImage originalImage) {
-        int[] result = new int[10000];
-        int topLeft = (originalImage.getHeight() - 100) / 2,
-                topLeft2 = (originalImage.getWidth() - 100) / 2;
-        int cur = 0;
-        for (int i = topLeft; i < topLeft + 100; i++) {
-            for (int j = topLeft2; j < topLeft2 + 100; j++) {
-                int x = originalImage.getRGB(j, i) ;
-                result[cur] = (x >> 16) & 0xff;
-                cur++;
-            }
-        }
-        return result;
-    }
+    public final static double RED_VISION_FACTOR = 0.6;
+    public final static double GREEN_VISION_FACTOR = 0.3;
+    public final static double BLUE_VISION_FACTOR = 0.1;
+    public final static int MINIMAL_INTENSITY = 70;
 
-    /*
-        int alpha = (pixel >> 24) & 0xff;
-        int red = (pixel >> 16) & 0xff;
-        int green = (pixel >> 8) & 0xff;
-        int blue = (pixel) & 0xff;
-    */
-
-    public static String[] getHeaderB() {
-        String[] result = new String[10001];
-        result[0] = "clazz";
-        int cur = 1;
-        for (int i = 0; i < 100; i++) {
-            for (int j = 0; j < 100; j++) {
-                result[cur] = "i" + String.valueOf(i * 100 + j);
-                cur++;
-            }
-        }
-        return result;
-    }
-
-    public ImageProcessor() {
-    }
-
-    public static String[] getHeaderC() {
-        String[] result = new String[2501];
-        result[0] = "clazz";
-        for (int i = 0; i < 2500; i++) {
-                result[i + 1] = "i" + String.valueOf(i);
-            }
-        return result;
-    }
-
-    public static int[] processC(BufferedImage originalImage) {
-        int[] result = new int[2500];
-        int topLeft = (originalImage.getHeight() - 100) / 2,
-                topLeft2 = (originalImage.getWidth() - 100) / 2;
-        int cur = 0;
-        for (int tl1 = topLeft; tl1 < topLeft + 100; tl1 += 4) {
-            for (int tl2 = topLeft2; tl2 < topLeft2 + 100; tl2 += 4) {
-                int dx = 0, dy = 0, vx = 0, vy = 0;
-                for (int i = 0; i < 4; i++) {
-                    for (int j = 0; j < 4; j++) {
-                        dx += (originalImage.getRGB(tl2 + j, tl1 + i + 1) >> 16) & 0xff -
-                                (originalImage.getRGB(tl2 + j, tl1 + i - 1) >> 16) & 0xff;
-                        vx += Math.abs((originalImage.getRGB(tl2 + j, tl1 + i + 1) >> 16) & 0xff -
-                                (originalImage.getRGB(tl2 + j, tl1 + i - 1) >> 16) & 0xff);
-                        dy += (originalImage.getRGB(tl2 + j + 1, tl1 + i) >> 16) & 0xff -
-                                (originalImage.getRGB(tl2 + j - 1, tl1 + i) >> 16) & 0xff;
-                        vy += Math.abs((originalImage.getRGB(tl2 + j + 1, tl1 + i) >> 16) & 0xff -
-                                (originalImage.getRGB(tl2 + j - 1, tl1 + i) >> 16) & 0xff);
-                    }
-                }
-                //int x = originalImage.getRGB(j, i) ;
-
-                result[cur] = dx * vx;
-                result[cur + 1] = dy * vy;
-                result[cur + 2] = vx * dx;
-                result[cur + 3] = vy * dy;
-                cur += 4;
-            }
-        }
-        return result;
-    }
-
-
-
-    public static String[] getHeaderD() {
-        String[] result = new String[801];
-        result[0] = "clazz";
-        for (int i = 0; i < 800; i++) {
-            result[i + 1] = "i" + String.valueOf(i);
-        }
-        return result;
-    }
-
-    public static int[] processD(BufferedImage originalImage) {
-        int[] result = new int[800];
-        int topLeft = (originalImage.getHeight() - 100) / 2,
-                topLeft2 = (originalImage.getWidth() - 100) / 2;
-        int cur = 0;
-        int[] dx = {-1, -1, -1, 0, 1, 1, 1, 0}, dy = {-1, 0, 1, 1, 1, 0, -1, -1};
-        for (int tl1 = topLeft; tl1 < topLeft + 100; tl1 += 10) {
-            for (int tl2 = topLeft2; tl2 < topLeft2 + 100; tl2 += 10) {
-                for (int ddx = 0; ddx < 10; ddx++) {
-                    for (int ddy = 0; ddy < 10; ddy++) {
-                        int c = 0, t = 0;
-                        for (int i = 0; i < 8; i++) {
-                            int x = (originalImage.getRGB(tl2 + ddx + dx[i], tl1 + dy[i] + ddy) >> 16) & 0xff -
-                                    (originalImage.getRGB(tl2 + ddx, tl1 + ddy) >> 16) & 0xff;
-                            if (x > c) {
-                                t = i;
-                                c = x;
-                            }
-                        }
-                        result[cur + t] += c;
-                    }
-                }
-                cur += 8;
-            }
-        }
-        return result;
-    }
+    private static final int[] dx = {-1, 0, 1, 0, -1, -1, 1, 1};
+    private static final int[] dy = {0, -1, 0, 1, 1, -1, -1, 1};
 
 
     public static String[] getHeaderMono() {
@@ -139,69 +28,68 @@ public class ImageProcessor {
         return result;
     }
 
-    private static int colour(int r, int g, int b) {
-        return ((int)( r * 0.5 + g * 0.4 + b * 0.1));
-    }
-
-
-    public static void main(String[] args) {
-        try {
-            BufferedImage image = ImageIO.read(new File("data/fissure/52.jpg"));
-            processMono(image);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public static double[] processMono(BufferedImage originalImage) {
+    private static int[][] getIntensity(BufferedImage originalImage) {
         int height = originalImage.getHeight();
         int width = originalImage.getWidth();
 
-        int[][] result = new int[height][width], sum = new int[height][width];
-        int ccount = 0;
+        int[][] result = new int[height][width];
         for (int h = 0; h < height; h++) {
             for (int w = 0; w < width; w++) {
                 int pixel = originalImage.getRGB(w, h);
                 int red = (pixel >> 16) & 0xff;
                 int green = (pixel >> 8) & 0xff;
                 int blue = (pixel) & 0xff;
-                result[h][w] = colour(red, green, blue);
-                if (result[h][w] > 70) {
-                    ccount++;
-                } else if (result[h][w] > 0) {
+                result[h][w] = ((int)(red * RED_VISION_FACTOR +
+                        green * GREEN_VISION_FACTOR +
+                        blue * BLUE_VISION_FACTOR));
+                if (result[h][w] < MINIMAL_INTENSITY) {
                     result[h][w] = 0;
                 }
-                sum[h][w] = result[h][w];
+            }
+        }
+        return result;
+    }
+
+    private static Pair<int[][], Double> getReverseMonoMap(int[][] intensityMap) {
+
+        int height = intensityMap.length;
+        int width = intensityMap[0].length;
+
+        int[][] prefixSum = new int[height][width],
+                result = new int[height][width];
+
+        for (int h = 0; h < height; h++) {
+            for (int w = 0; w < width; w++) {
+                prefixSum[h][w] = intensityMap[h][w];
+                result[h][w] = intensityMap[h][w];
                 if (h > 0) {
-                    sum[h][w] += sum[h - 1][w];
+                    prefixSum[h][w] += prefixSum[h - 1][w];
                 }
                 if (w > 0) {
-                    sum[h][w] += sum[h][w - 1];
+                    prefixSum[h][w] += prefixSum[h][w - 1];
                 }
                 if (h > 0 && w > 0) {
-                    sum[h][w] -= sum[h - 1][w - 1];
+                    prefixSum[h][w] -= prefixSum[h - 1][w - 1];
                 }
             }
         }
 
-        int fcount = 0;
-        double mdif = 0.0;
+        double maxIntensityDiff = 0.0;
         {
-            int S = width / 8;
-            int s2 = S / 2;
+            int windowHalfSize = width / 16;
             double t = 0.1;
-            long summ = 0;
-            int count = 0;
+            long rectIntensitySum;
+            int pixelCount;
             int x1, y1, x2, y2;
 
 
             for (int i = 0; i < width; i++) {
                 for (int j = 0; j < height; j++) {
 
-                    x1 = i - s2;
-                    x2 = i + s2;
-                    y1 = j - s2;
-                    y2 = j + s2;
+                    x1 = i - windowHalfSize;
+                    x2 = i + windowHalfSize;
+                    y1 = j - windowHalfSize;
+                    y2 = j + windowHalfSize;
 
                     if (x1 < 0)
                         x1 = 0;
@@ -212,88 +100,129 @@ public class ImageProcessor {
                     if (y2 >= height)
                         y2 = height - 1;
 
-                    count = (x2 - x1) * (y2 - y1);
+                    pixelCount = (x2 - x1) * (y2 - y1);
 
-                    summ = sum[y2][x2] - sum[y1][x2] -
-                            sum[y2][x1] + sum[y1][x1];
-                    if (result[j][i] > 0 && (long) (result[j][i] * count) < (long) (summ * (1.0 - t))) {
-                        mdif = Math.max(mdif, 1 - ((double) result[j][i]) * count / summ);
+                    rectIntensitySum = prefixSum[y2][x2] - prefixSum[y1][x2] -
+                            prefixSum[y2][x1] + prefixSum[y1][x1];
+                    if (result[j][i] > 0 &&
+                            (long) (result[j][i] * pixelCount) < (long) (rectIntensitySum * (1.0 - t))) {
+                        maxIntensityDiff = Math.max(maxIntensityDiff, 1 -
+                                ((double) result[j][i]) * pixelCount / rectIntensitySum);
                         result[j][i] = 0;
-                        fcount++;
                     } else
                         result[j][i] = 255;
                 }
             }
         }
+        return new Pair<>(result, maxIntensityDiff);
+    }
 
+    private static int getGreyCellCount(int[][] intensityMap) {
+        int result = 0;
+        for (int[] line : intensityMap) {
+            for (int pixelIntensity : line) {
+                if (pixelIntensity > 0) {
+                    result++;
+                }
+            }
+        }
+        return result;
+    }
 
-        double [] res = new double[5];
-        res[0] = ((double) fcount) / ccount;
-        res[1] = mdif;
+    private static int getMaxShapeSquare(int[][] image) {
+        int height = image.length;
+        int width = image[0].length;
         int max = 0;
-        int[] dx = {-1, 0, 1, 0, -1, -1, 1, 1};
-        int[] dy = {0, -1, 0, 1, 1, -1, -1, 1};
         for (int i = 0; i < height; i++) {
             for (int j = 0; j < width; j++) {
-                if (result[i][j] == 0) {
-                    int ffcount = 0;
+                if (image[i][j] == 0) {
+                    int shapeSquare = 0;
                     Queue<Integer> q = new ArrayDeque<>();
                     q.add(i * height + width);
-                    result[i][j] = 1;
+                    image[i][j] = 1;
                     while (!q.isEmpty()) {
                         int x = q.poll();
                         int ix = x % height;
                         int iy = x / height;
-                        ffcount++;
+                        shapeSquare++;
                         for (int t = 0; t < 8; t++) {
                             if (iy + dy[t] > 0 && iy + dy[t] < height &&
                                     ix + dx[t] > 0 && ix + dx[t] < width) {
-                                if (result[iy + dy[t]][ix + dx[t]] == 0) {
-                                    result[iy + dy[t]][ix + dx[t]] = 1;
+                                if (image[iy + dy[t]][ix + dx[t]] == 0) {
+                                    image[iy + dy[t]][ix + dx[t]] = 1;
                                     q.add((iy + dy[t]) * height + ix + dx[t]);
                                 }
                             }
                         }
                     }
-                    max = Math.max(max, ffcount);
+                    max = Math.max(max, shapeSquare);
                 }
             }
         }
-        res[2] = ((double) max) / ccount;
-        fcount = 0;
+        return max;
+    } 
+
+    private static Pair<Double, Double> getDeepFissureFeatures(int[][] image, int objectCellsCount) {
+        int height = image.length;
+        int width = image[0].length;
+        int max = 0;
+        int deepSquaresSum = 0;
         max = 0;
-        double lim = ccount * 0.00025;
+        double lim = objectCellsCount * 0.00025;
         for (int i = 0; i < height; i++) {
             for (int j = 0; j < width; j++) {
-                if (result[i][j] == 1) {
-                    int ffcount = 0;
+                if (image[i][j] == 1) {
+                    int deepSquare = 0;
                     Queue<Integer> q = new ArrayDeque<>();
                     q.add(i * height + width);
-                    result[i][j] = 2;
+                    image[i][j] = 2;
                     while (!q.isEmpty()) {
                         int x = q.poll();
                         int ix = x % height;
                         int iy = x / height;
-                        ffcount++;
+                        deepSquare++;
                         for (int t = 0; t < 4; t++) {
                             if (iy + dy[t] > 0 && iy + dy[t] < height &&
                                     ix + dx[t] > 0 && ix + dx[t] < width) {
-                                if (result[iy + dy[t]][ix + dx[t]] == 1) {
-                                    result[iy + dy[t]][ix + dx[t]] = 2;
+                                if (image[iy + dy[t]][ix + dx[t]] == 1) {
+                                    image[iy + dy[t]][ix + dx[t]] = 2;
                                     q.add((iy + dy[t]) * height + ix + dx[t]);
                                 }
                             }
                         }
-                        if (ffcount > lim) {
-                            fcount += ffcount;
+                        if (deepSquare > lim) {
+                            deepSquaresSum += deepSquare;
                         }
                     }
-                    max = Math.max(max, ffcount);
+                    max = Math.max(max, deepSquare);
                 }
             }
         }
-        res[3] = ((double) max) / ccount;
-        res[4] = ((double) fcount) / ccount;
+        return new Pair<>(((double) max) / objectCellsCount, ((double) deepSquaresSum) / objectCellsCount);
+    }
+
+    public static double[] processMono(BufferedImage originalImage) {
+        int height = originalImage.getHeight();
+        int width = originalImage.getWidth();
+
+        int[][] image = getIntensity(originalImage);
+        int objectCellsCount = getGreyCellCount(image);
+
+        Pair<int[][], Double> monoImage = getReverseMonoMap(image);
+        image = monoImage.getKey();
+        double maxIntensityDifference = monoImage.getValue();
+        int functionalCellsCount = height * width - getGreyCellCount(image);
+
+
+        double [] res = new double[5];
+        res[0] = ((double) functionalCellsCount) / objectCellsCount;
+        res[1] = maxIntensityDifference;
+        res[2] = ((double) getMaxShapeSquare(image)) / objectCellsCount;
+
+        Pair<Double, Double> deepFissureFeatures = getDeepFissureFeatures(image, objectCellsCount);
+
+        res[3] = deepFissureFeatures.getKey();
+        res[4] = deepFissureFeatures.getValue();
         for (int i = 0; i < res.length; i++) {
             res[i] *= 100.0;
         }
