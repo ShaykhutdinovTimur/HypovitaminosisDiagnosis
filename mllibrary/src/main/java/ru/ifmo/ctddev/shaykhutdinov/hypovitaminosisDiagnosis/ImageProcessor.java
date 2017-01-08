@@ -1,4 +1,4 @@
-package ru.ifmo.ctddev.shaykhutdinov.hypovitaminosisDiagnosis.baseProvider;
+package ru.ifmo.ctddev.shaykhutdinov.hypovitaminosisDiagnosis;
 
 import javafx.util.Pair;
 
@@ -39,7 +39,7 @@ public class ImageProcessor {
                 int red = (pixel >> 16) & 0xff;
                 int green = (pixel >> 8) & 0xff;
                 int blue = (pixel) & 0xff;
-                result[h][w] = ((int)(red * RED_VISION_FACTOR +
+                result[h][w] = ((int) (red * RED_VISION_FACTOR +
                         green * GREEN_VISION_FACTOR +
                         blue * BLUE_VISION_FACTOR));
                 if (result[h][w] < MINIMAL_INTENSITY) {
@@ -160,15 +160,15 @@ public class ImageProcessor {
             }
         }
         return max;
-    } 
+    }
 
     private static Pair<Double, Double> getDeepFissureFeatures(int[][] image, int objectCellsCount) {
         int height = image.length;
         int width = image[0].length;
-        int max = 0;
+        int max;
         int deepSquaresSum = 0;
         max = 0;
-        double lim = objectCellsCount * 0.00025;
+        double lim = objectCellsCount * 0.000125;
         for (int i = 0; i < height; i++) {
             for (int j = 0; j < width; j++) {
                 if (image[i][j] == 1) {
@@ -190,9 +190,9 @@ public class ImageProcessor {
                                 }
                             }
                         }
-                        if (deepSquare > lim) {
-                            deepSquaresSum += deepSquare;
-                        }
+                    }
+                    if (deepSquare > lim) {
+                        deepSquaresSum += deepSquare;
                     }
                     max = Math.max(max, deepSquare);
                 }
@@ -214,7 +214,7 @@ public class ImageProcessor {
         int functionalCellsCount = height * width - getGreyCellCount(image);
 
 
-        double [] res = new double[5];
+        double[] res = new double[5];
         res[0] = ((double) functionalCellsCount) / objectCellsCount;
         res[1] = maxIntensityDifference;
         res[2] = ((double) getMaxShapeSquare(image)) / objectCellsCount;

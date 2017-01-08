@@ -6,40 +6,21 @@ import java.io.IOException;
 /**
  * Created by timur
  */
-class CVSBaseAdaptor {
+class CVSBaseAdaptor implements AutoCloseable {
     private FileWriter writer;
     private int headerCount;
-    private int cur;
-
-    void setWriter(FileWriter writer) {
-        this.writer = writer;
-    }
-
-    public FileWriter getWriter() {
-        return writer;
-    }
-
-    public int getHeaderCount() {
-        return headerCount;
-    }
-
-    void setHeaderCount(int headerCount) {
-        this.headerCount = headerCount;
-    }
-
-    CVSBaseAdaptor() {
-    }
+    private int currentPosition;
 
     public CVSBaseAdaptor(FileWriter writer, int headerCount) {
         this.writer = writer;
         this.headerCount = headerCount;
-        cur = 0;
+        currentPosition = 0;
     }
 
     void append2(double a) {
         try {
-            cur = (cur + 1) % headerCount;
-            if (cur != 0) {
+            currentPosition = (currentPosition + 1) % headerCount;
+            if (currentPosition != 0) {
                 writer.write(a + ",");
             } else {
                 writer.write(a + "\n");
@@ -51,8 +32,8 @@ class CVSBaseAdaptor {
 
     void append(Object a) {
         try {
-            cur = (cur + 1) % headerCount;
-            if (cur != 0) {
+            currentPosition = (currentPosition + 1) % headerCount;
+            if (currentPosition != 0) {
                 writer.write(a.toString() + ",");
             } else {
                 writer.write(a.toString() + "\n");
@@ -62,17 +43,9 @@ class CVSBaseAdaptor {
         }
     }
 
-    boolean ready() {
-        return (writer != null);
-    }
-
-    boolean finish() {
-        try {
-            writer.flush();
-            writer.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return (cur == 0);
+    @Override
+    public void close() throws Exception {
+        writer.flush();
+        writer.close();
     }
 }

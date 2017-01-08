@@ -6,69 +6,54 @@ import java.util.StringTokenizer;
 /**
  * Created by timur
  */
-class FastReader {
+class FastReader implements AutoCloseable {
+    public static final String END_CODE = "-1";
     private boolean eof;
-    private BufferedReader br;
-    private StringTokenizer st;
-    private String name;
+    private BufferedReader bufferedReader;
+    private StringTokenizer stringTokenizer;
 
     FastReader(String name) {
-        this.name = name;
+        InputStream input = System.in;
+        try {
+            File file = new File(name);
+            if (file.exists() && file.canRead()) {
+                input = new FileInputStream(file);
+            }
+        } catch (Throwable ignored) {
+        }
+        bufferedReader = new BufferedReader(new InputStreamReader(input));
     }
 
     boolean hasNext() {
         try {
-            return !eof || (st.hasMoreElements() && br.ready());
+            return !eof || (stringTokenizer.hasMoreElements() && bufferedReader.ready());
         } catch (IOException e) {
             return false;
         }
     }
 
     String nextToken() {
-        while (st == null || !st.hasMoreTokens()) {
+        while (stringTokenizer == null || !stringTokenizer.hasMoreTokens()) {
             try {
-                st = new StringTokenizer(br.readLine());
+                stringTokenizer = new StringTokenizer(bufferedReader.readLine());
             } catch (Exception e) {
                 eof = true;
-                return "-1";
+                return END_CODE;
             }
         }
-        return st.nextToken();
+        return stringTokenizer.nextToken();
     }
 
     int nextInt() {
         return Integer.parseInt(nextToken());
     }
 
-    public long nextLong() {
-        return Long.parseLong(nextToken());
-    }
-
     double nextDouble() {
         return Double.parseDouble(nextToken());
     }
 
-    private String nextLine() throws IOException {
-        return br.readLine();
-    }
-
-    void start() throws IOException {
-        InputStream input = System.in;
-        try {
-            File f = new File(name);
-            if (f.exists() && f.canRead()) {
-                input = new FileInputStream(f);
-            }
-        } catch (Throwable ignored) {
-        }
-        br = new BufferedReader(new InputStreamReader(input));
-    }
-
-    void finish() {
-        try {
-            br.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    @Override
+    public void close() throws Exception {
+        bufferedReader.close();
     }
 }

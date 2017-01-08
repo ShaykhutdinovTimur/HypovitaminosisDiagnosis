@@ -1,6 +1,5 @@
 package ru.ifmo.ctddev.shaykhutdinov.hypovitaminosisDiagnosis;
 
-import ru.ifmo.ctddev.shaykhutdinov.hypovitaminosisDiagnosis.baseProvider.ImageProcessor;
 import weka.core.Attribute;
 import weka.core.DenseInstance;
 import weka.core.Instance;

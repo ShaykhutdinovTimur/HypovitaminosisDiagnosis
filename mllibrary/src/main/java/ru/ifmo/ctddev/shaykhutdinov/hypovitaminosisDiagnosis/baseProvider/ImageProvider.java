@@ -8,12 +8,18 @@ import java.io.IOException;
 /**
  * Created by timur
  */
-class ImageProvider {
+class ImageProvider implements AutoCloseable {
     private String sourceDir;
     private double characteristics;
     private BufferedImage image;
-    private int cur;
+    private int currentImageNumber;
     private FastReader info;
+
+    public ImageProvider(String sourceDir) {
+        this.sourceDir = sourceDir;
+        this.currentImageNumber = 0;
+        info = new FastReader(this.sourceDir + "info.txt");
+    }
 
     double getCharacteristics() {
         return characteristics;
@@ -23,42 +29,18 @@ class ImageProvider {
         return image;
     }
 
-    ImageProvider() {
-    }
-
-    void setSourceDir(String sourceDir) {
-        this.sourceDir = sourceDir;
-        this.cur = 0;
-        info = new FastReader(this.sourceDir + "info.txt");
-    }
-
-    public ImageProvider(String sourceDir) {
-        setSourceDir(sourceDir);
-    }
-
-    void ready() {
-        try {
-            if (info != null) {
-                info.start();
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
     void next() {
         try {
-            image = ImageIO.read(new File(sourceDir + (cur + 1) + ".jpg"));
-            cur++;
+            image = ImageIO.read(new File(sourceDir + (currentImageNumber + 1) + ".jpg"));
+            currentImageNumber++;
         } catch (IOException e) {
             e.printStackTrace();
         }
         characteristics = info.nextDouble();
     }
 
-    void finish() {
-        if (info != null) {
-            info.finish();
-        }
+    @Override
+    public void close() throws Exception {
+        info.close();
     }
 }

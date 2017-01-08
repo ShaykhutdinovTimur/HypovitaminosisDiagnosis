@@ -1,5 +1,7 @@
 package ru.ifmo.ctddev.shaykhutdinov.hypovitaminosisDiagnosis.baseProvider;
 
+import ru.ifmo.ctddev.shaykhutdinov.hypovitaminosisDiagnosis.ImageProcessor;
+
 import java.io.FileWriter;
 
 /**
@@ -14,26 +16,20 @@ public class BaseProvider {
     private void run() {
         try {
             FastReader reader = new FastReader("data/baseInfo.txt");
-            reader.start();
-            ImageProvider imageProvider = new ImageProvider();
-            CVSBaseAdaptor cvsBaseAdaptor = new CVSBaseAdaptor();
             while (reader.hasNext()) {
                 String name = reader.nextToken();
-                if ("-1".equals(name)) {
+                if (FastReader.END_CODE.equals(name)) {
                     break;
                 }
-                String dir = "data/" + name + "/";
-                imageProvider.setSourceDir(dir);
-                cvsBaseAdaptor.setHeaderCount(6);
-                cvsBaseAdaptor.setWriter(new FileWriter(name + "Base.csv"));
-                imageProvider.ready();
-                cvsBaseAdaptor.ready();
+                int headerSize = reader.nextInt();
+                CVSBaseAdaptor cvsBaseAdaptor = new CVSBaseAdaptor(new FileWriter(name + "Base.csv"), headerSize);
                 String[] header = ImageProcessor.getHeaderMono();
                 for (String aHeader : header) {
                     cvsBaseAdaptor.append(aHeader);
                 }
-                int count = reader.nextInt();
-                for (int i = 0; i < count; i++) {
+                int imageCount = reader.nextInt();
+                ImageProvider imageProvider = new ImageProvider("data/" + name + "/");
+                for (int i = 0; i < imageCount; i++) {
                     imageProvider.next();
                     double x = imageProvider.getCharacteristics();
                     double[] pix = ImageProcessor.processMono(imageProvider.getImage());
@@ -42,8 +38,6 @@ public class BaseProvider {
                         cvsBaseAdaptor.append2(aPix);
                     }
                 }
-                imageProvider.finish();
-                cvsBaseAdaptor.finish();
             }
         } catch (Throwable e) {
             e.printStackTrace();
