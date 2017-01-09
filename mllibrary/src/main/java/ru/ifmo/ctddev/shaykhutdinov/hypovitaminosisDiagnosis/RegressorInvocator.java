@@ -3,10 +3,17 @@ package ru.ifmo.ctddev.shaykhutdinov.hypovitaminosisDiagnosis;
 import weka.classifiers.functions.SMOreg;
 import weka.classifiers.functions.supportVector.PolyKernel;
 import weka.classifiers.functions.supportVector.RegSMOImproved;
+import weka.core.Attribute;
+import weka.core.DenseInstance;
+import weka.core.Instance;
 import weka.core.Instances;
 import weka.core.converters.CSVLoader;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
 
 /**
  * Created by timur
@@ -32,6 +39,24 @@ class RegressorInvocator {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
 
+    void nurture(InputStream inputStream, Double characteristic) {
+        try {
+            BufferedImage image = ImageIO.read(inputStream);
+            Instance ins = new DenseInstance(6);
+            double[] features = ImageProcessor.processMono(image);
+            ArrayList<Attribute> atts = new ArrayList<>();
+            atts.add(i.attribute(0));
+            ins.setValue(0, characteristic);
+            for (int j = 1; j < 6; j++) {
+                ins.setValue(i.attribute(j), features[j - 1]);
+                atts.add(i.attribute(j));
+            }
+            i.add(ins);
+            regression.buildClassifier(i);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }
