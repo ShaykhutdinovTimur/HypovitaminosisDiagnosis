@@ -5,7 +5,7 @@
 <html>
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-    <title>&lt;c:forEach&gt; Demo</title>
+    <title>Train</title>
 </head>
 <body>
 
