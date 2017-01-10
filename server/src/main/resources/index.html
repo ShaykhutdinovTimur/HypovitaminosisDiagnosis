@@ -1,18 +1,30 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+    <meta charset="utf-8">
+
     <title>Hypovitaminosis Diagnosis</title>
+
+    <link href="/webjars/bootstrap/3.3.7-1/css/bootstrap.min.css" rel="stylesheet">
+    <link href="style.css" rel="stylesheet">
 </head>
+
 <body>
 
+<div class="container">
+    <div class="starter-template">
+        <h1>Do photo of your tongue, kek</h1>
+        <div class="container" id="my_camera" style="width:320px; height:280px;"></div>
+        <a href="javascript:void(take_snapshot())">Take Snapshot</a>
+        <h2><div id="my_result"></div></h2>
+    </div>
+
+</div>
+
+
 <script src="webcam.js"></script>
-
-<div id="my_camera" style="width:320px; height:240px;"></div>
-<div id="my_result"></div>
-
 <script language="JavaScript">
-        Webcam.attach( '#my_camera' );
+        Webcam.attach('#my_camera');
 
         function take_snapshot() {
             Webcam.snap( function(data_uri) {
@@ -27,11 +39,9 @@
 
     } );
     }
-
-
 </script>
 
-<a href="javascript:void(take_snapshot())">Take Snapshot</a>
-
+<script src="/webjars/jquery/1.11.1/jquery.min.js"></script>
+<script src="/webjars/bootstrap/3.3.7-1/js/bootstrap.min.js"></script>
 </body>
 </html>

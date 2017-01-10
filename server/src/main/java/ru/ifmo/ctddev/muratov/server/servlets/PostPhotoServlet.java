@@ -50,7 +50,7 @@ public class PostPhotoServlet extends HttpServlet {
         }
         response.setContentType("text/html");
         response.setStatus(HttpServletResponse.SC_OK);
-        response.getWriter().print(String.format("Result is %.5f", result));
+        response.getWriter().print(String.format("Your result is %.5f", result));
     }
 
 

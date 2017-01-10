@@ -15,6 +15,17 @@
         <servlet-class>ru.ifmo.ctddev.muratov.server.servlets.TrainerServlet</servlet-class>
     </servlet>
 
+    <servlet>
+        <servlet-name>WebjarsServlet</servlet-name>
+        <servlet-class>org.webjars.servlet.WebjarsServlet</servlet-class>
+        <load-on-startup>2</load-on-startup>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>WebjarsServlet</servlet-name>
+        <url-pattern>/webjars/*</url-pattern>
+    </servlet-mapping>
+
     <servlet-mapping>
         <servlet-name>PostPhotoServlet</servlet-name>
         <url-pattern>/upload</url-pattern>
