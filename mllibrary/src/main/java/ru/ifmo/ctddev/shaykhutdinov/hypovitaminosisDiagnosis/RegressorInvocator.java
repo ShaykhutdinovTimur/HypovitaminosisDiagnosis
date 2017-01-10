@@ -18,11 +18,11 @@ import java.util.ArrayList;
 /**
  * Created by timur
  */
-class RegressorInvocator {
+public class RegressorInvocator implements Model {
     SMOreg regression;
     Instances i;
 
-    RegressorInvocator() {
+    public RegressorInvocator() {
         CSVLoader loader = new CSVLoader();
         try {
             loader.setSource(getClass().getClassLoader().getResourceAsStream("fissureBase.csv"));
@@ -41,7 +41,8 @@ class RegressorInvocator {
         }
     }
 
-    void nurture(InputStream inputStream, Double characteristic) {
+    @Override
+    public void train(InputStream inputStream, double characteristic) {
         try {
             BufferedImage image = ImageIO.read(inputStream);
             Instance ins = new DenseInstance(6);
@@ -58,5 +59,22 @@ class RegressorInvocator {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public double getResult(InputStream is) throws Exception {
+        BufferedImage image = ImageIO.read(is);
+        Instance ins = new DenseInstance(6);
+        double[] features = ImageProcessor.processMono(image);
+        ArrayList<Attribute> atts = new ArrayList<>();
+        atts.add(i.attribute(0));
+        for (int j = 1; j < 6; j++) {
+            ins.setValue(i.attribute(j), features[j - 1]);
+            atts.add(i.attribute(j));
+        }
+        Instances dataUnlabeled = new Instances("TestInstances", atts, 0);
+        dataUnlabeled.add(ins);
+        dataUnlabeled.setClassIndex(dataUnlabeled.numAttributes() - 1);
+        return regression.classifyInstance(dataUnlabeled.firstInstance());
     }
 }

@@ -1,9 +1,12 @@
 package ru.ifmo.ctddev.muratov.server.servlets;
 
+import ru.ifmo.ctddev.muratov.server.StaticMembers;
+
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.nio.file.Files;
@@ -48,7 +51,8 @@ public class TrainerServlet extends HttpServlet {
         int photoId = Integer.valueOf(request.getParameter("photoId"));
         String photo = String.format(PHOTO_URL, photoId);
         System.out.println("result for photo number " + photoId + " is " + result);
-        // todo delete photo and retrain model
+        StaticMembers.ImageHandler.train(new FileInputStream(photo), result);
+        Files.delete(Paths.get(photo));
         response.sendRedirect("/train");
     }
 

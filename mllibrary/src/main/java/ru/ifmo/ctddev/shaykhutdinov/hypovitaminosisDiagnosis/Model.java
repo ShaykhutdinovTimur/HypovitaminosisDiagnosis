@@ -7,7 +7,14 @@ import java.io.InputStream;
  */
 public interface Model {
 
-    double getResult(InputStream photo);
-    double learn(InputStream photo, double result);
+    /**
+     * gets jpeg image as input stream and returns result
+     */
+    double getResult(InputStream photo) throws Exception;
+
+    /**
+     * gets jpeg image as input stream and trains model on it
+     */
+    void train(InputStream photo, double characteristic);
 
 }
