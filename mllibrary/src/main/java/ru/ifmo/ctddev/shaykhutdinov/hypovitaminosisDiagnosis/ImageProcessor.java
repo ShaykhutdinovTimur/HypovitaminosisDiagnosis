@@ -129,6 +129,31 @@ public class ImageProcessor {
         return result;
     }
 
+    private static int markShapeSquare(int directionsCount, int[][] image, int posY, int posX) {
+        int shapeSquare = 0;
+        int height = image.length;
+        int width = image[0].length;
+        Queue<Integer> q = new ArrayDeque<>();
+        q.add(posY * width + posX);
+        image[posY][posX] = 1;
+        while (!q.isEmpty()) {
+            int x = q.poll();
+            int ix = x % width;
+            int iy = x / width;
+            shapeSquare++;
+            for (int t = 0; t < directionsCount; t++) {
+                if (iy + dy[t] > 0 && iy + dy[t] < height &&
+                        ix + dx[t] > 0 && ix + dx[t] < width) {
+                    if (image[iy + dy[t]][ix + dx[t]] == 0) {
+                        image[iy + dy[t]][ix + dx[t]] = 1;
+                        q.add((iy + dy[t]) * width + ix + dx[t]);
+                    }
+                }
+            }
+        }
+        return shapeSquare;
+    }
+
     private static int getMaxShapeSquare(int[][] image) {
         int height = image.length;
         int width = image[0].length;
@@ -136,26 +161,15 @@ public class ImageProcessor {
         for (int i = 0; i < height; i++) {
             for (int j = 0; j < width; j++) {
                 if (image[i][j] == 0) {
-                    int shapeSquare = 0;
-                    Queue<Integer> q = new ArrayDeque<>();
-                    q.add(i * height + width);
-                    image[i][j] = 1;
-                    while (!q.isEmpty()) {
-                        int x = q.poll();
-                        int ix = x % height;
-                        int iy = x / height;
-                        shapeSquare++;
-                        for (int t = 0; t < 8; t++) {
-                            if (iy + dy[t] > 0 && iy + dy[t] < height &&
-                                    ix + dx[t] > 0 && ix + dx[t] < width) {
-                                if (image[iy + dy[t]][ix + dx[t]] == 0) {
-                                    image[iy + dy[t]][ix + dx[t]] = 1;
-                                    q.add((iy + dy[t]) * height + ix + dx[t]);
-                                }
-                            }
-                        }
-                    }
+                    int shapeSquare = markShapeSquare(8, image, i, j);
                     max = Math.max(max, shapeSquare);
+                }
+            }
+        }
+        for (int i = 0; i < height; i++) {
+            for (int j = 0; j < width; j++) {
+                if (image[i][j] == 1) {
+                    image[i][j] = 0;
                 }
             }
         }
@@ -171,30 +185,20 @@ public class ImageProcessor {
         double lim = objectCellsCount * 0.000125;
         for (int i = 0; i < height; i++) {
             for (int j = 0; j < width; j++) {
-                if (image[i][j] == 1) {
-                    int deepSquare = 0;
-                    Queue<Integer> q = new ArrayDeque<>();
-                    q.add(i * height + width);
-                    image[i][j] = 2;
-                    while (!q.isEmpty()) {
-                        int x = q.poll();
-                        int ix = x % height;
-                        int iy = x / height;
-                        deepSquare++;
-                        for (int t = 0; t < 4; t++) {
-                            if (iy + dy[t] > 0 && iy + dy[t] < height &&
-                                    ix + dx[t] > 0 && ix + dx[t] < width) {
-                                if (image[iy + dy[t]][ix + dx[t]] == 1) {
-                                    image[iy + dy[t]][ix + dx[t]] = 2;
-                                    q.add((iy + dy[t]) * height + ix + dx[t]);
-                                }
-                            }
-                        }
-                    }
+                if (image[i][j] == 0) {
+                    int deepSquare = markShapeSquare(4, image, i, j);
                     if (deepSquare > lim) {
                         deepSquaresSum += deepSquare;
                     }
                     max = Math.max(max, deepSquare);
+                }
+            }
+        }
+
+        for (int i = 0; i < height; i++) {
+            for (int j = 0; j < width; j++) {
+                if (image[i][j] == 1) {
+                    image[i][j] = 0;
                 }
             }
         }

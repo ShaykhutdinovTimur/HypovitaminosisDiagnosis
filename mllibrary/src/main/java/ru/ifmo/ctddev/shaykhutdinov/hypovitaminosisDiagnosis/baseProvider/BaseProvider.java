@@ -38,6 +38,7 @@ public class BaseProvider {
                         cvsBaseAdaptor.append2(aPix);
                     }
                 }
+                cvsBaseAdaptor.close();
             }
         } catch (Throwable e) {
             e.printStackTrace();
