@@ -7,5 +7,5 @@ import ru.ifmo.ctddev.shaykhutdinov.hypovitaminosisDiagnosis.RegressorInvocator;
  * @author amir.
  */
 public class StaticMembers {
-    public static Model ImageHandler = new RegressorInvocator();
+    public static final Model ImageHandler = new RegressorInvocator();
 }

@@ -2,63 +2,57 @@ package ru.ifmo.ctddev.muratov.server.servlets;
 
 import ru.ifmo.ctddev.muratov.server.StaticMembers;
 
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
  * @author amir.
  */
 public class TrainerServlet extends HttpServlet {
-    private static final String PHOTO_URL = "server/src/main/resources/photos/photo%d.jpeg";
-    private static final String FORM =
-            "<img src=\"%s\" alt=\"tonguePhoto\" style=\"width:304px;height:228px;\">\n" +
-                    "<form id=\"train\" action=\"/train\" method=\"POST\">\n" +
-                    "<input id=\"result\" name=\"result\" type=\"text\" value=\"0\"/>" +
-                    "<input type=\"hidden\" name=\"photoId\" value=%s>\n" +
-                    "        <input type=\"submit\" value=\"submit result\">\n" +
-                    "    </form>\n<hr>\n";
+    private static final String PHOTO_URL = "server/src/main/resources/photos/%s";
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        //todo
-        String html = readFile("server/src/main/resources/train.html");
-        response.setContentType("text/html");
-        PrintWriter out = response.getWriter();
-        out.println(html);
-        String photoDir = "server/src/main/resources/photos";
-        try (Stream<Path> paths = Files.walk(Paths.get(photoDir))) {
-            paths.forEach(filePath -> {
-                if (Files.isRegularFile(filePath))
-                    out.println(String.format(FORM, "/photos/" + filePath.getFileName(),
-                            filePath.getFileName().toString().replaceAll("\\D+", "")));
-            });
-        }
-        out.print("</body>\n</html>");
+        List<String> photos = getFiles("server/src/main/resources/photos");
+        request.getSession().setAttribute("photos", photos);
+        getServletContext().getRequestDispatcher("/train.jsp").forward(request, response);
     }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         double result = Double.valueOf(request.getParameter("result"));
-        int photoId = Integer.valueOf(request.getParameter("photoId"));
-        String photo = String.format(PHOTO_URL, photoId);
-        System.out.println("result for photo number " + photoId + " is " + result);
+        String photo = String.format(PHOTO_URL, request.getParameter("photoName"));
+        System.out.println("result for photo " + photo + " is " + result);
         StaticMembers.ImageHandler.train(new FileInputStream(photo), result);
         Files.delete(Paths.get(photo));
         response.sendRedirect("/train");
     }
 
-    private static String readFile(String path) throws IOException {
-        byte[] encoded = Files.readAllBytes(Paths.get(path));
-        return new String(encoded);
+    private List<String> getFiles(String dir) {
+        try {
+            return Files.walk(Paths.get(dir))
+                    .filter(Files::isRegularFile)
+                    .map(Path::toFile)
+                    .map(File::getName)
+                    .collect(Collectors.toList());
+        } catch (IOException e) {
+            return null;
+        }
     }
-
 }
