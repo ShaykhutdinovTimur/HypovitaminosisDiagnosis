@@ -16,7 +16,9 @@
         <h1>Do photo of your tongue, kek</h1>
         <div class="container" id="my_camera" style="width:320px; height:280px;"></div>
         <a href="javascript:void(take_snapshot())">Take Snapshot</a>
-        <h2><div id="my_result"></div></h2>
+        <h2><div id="interpretation"></div></h2>
+        <br>
+        <div id="my_result"></div>
     </div>
 
 </div>
@@ -29,12 +31,13 @@
         function take_snapshot() {
             Webcam.snap( function(data_uri) {
                 // snap complete, image data is in 'data_uri'
-
                 Webcam.upload( data_uri, '/upload', function(code, text) {
                     // Upload complete!
                     // 'code' will be the HTTP response code from the server, e.g. 200
                     // 'text' will be the raw response content
-                    document.getElementById('my_result').innerHTML = text;
+                    parsed = text.split("\n")
+                    document.getElementById('my_result').innerHTML = parsed[0];
+                    document.getElementById('interpretation').innerHTML = parsed[1];
                 } );
 
     } );
