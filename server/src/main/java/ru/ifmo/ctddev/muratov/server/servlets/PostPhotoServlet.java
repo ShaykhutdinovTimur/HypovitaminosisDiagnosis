@@ -12,7 +12,10 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.*;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 
 /**
@@ -50,9 +53,30 @@ public class PostPhotoServlet extends HttpServlet {
         }
         response.setContentType("text/html");
         response.setStatus(HttpServletResponse.SC_OK);
-        response.getWriter().print(String.format("Your result is %.5f", result));
+        response.getWriter().println(String.format("Your result is %.5f\n", result));
+        response.getWriter().println("Diagnosis: " + interpret(result));
     }
 
-
+    private static String interpret(double fissureResult) {
+        if (fissureResult < 0) {
+            return "low intensity or high contrast image";
+        }
+        if (fissureResult < 1.5) {
+            return "absolute norm";
+        }
+        if (fissureResult < 3) {
+            return "within the normal range";
+        }
+        if (fissureResult < 4.5) {
+            return "small lack of vitamin";
+        }
+        if (fissureResult < 6) {
+            return "lack of vitamin";
+        }
+        if (fissureResult < 8) {
+            return "significant deficient of vitamin";
+        }
+        return "low intensity or high contrast image";
+    }
 
 }
