@@ -14,6 +14,7 @@ public class ImageProcessor {
     public final static double GREEN_VISION_FACTOR = 0.3;
     public final static double BLUE_VISION_FACTOR = 0.1;
     public final static int MINIMAL_INTENSITY = 70;
+    public final static int CENTER_SIZE = 150;
 
     private static final int[] dx = {-1, 0, 1, 0, -1, -1, 1, 1};
     private static final int[] dy = {0, -1, 0, 1, 1, -1, -1, 1};
@@ -205,11 +206,10 @@ public class ImageProcessor {
         return new Pair<>(((double) max) / objectCellsCount, ((double) deepSquaresSum) / objectCellsCount);
     }
 
-    public static double[] processMono(BufferedImage originalImage) {
-        int height = originalImage.getHeight();
-        int width = originalImage.getWidth();
+    private static double[] processMap(int[][] image) {
+        int height = image.length;
+        int width = image[0].length;
 
-        int[][] image = getIntensity(originalImage);
         int objectCellsCount = getGreyCellCount(image);
 
         Pair<int[][], Double> monoImage = getReverseMonoMap(image);
@@ -231,5 +231,26 @@ public class ImageProcessor {
             res[i] *= 100.0;
         }
         return res;
+    }
+
+    public static double[] processMono(BufferedImage originalImage) {
+        return processMap(getIntensity(originalImage));
+    }
+
+    public static double[] processCenterMono(BufferedImage originalImage) {
+        int[][] image = getIntensity(originalImage);
+        int height = image.length;
+        int width = image[0].length;
+        for (int i = 0; i < height; i++) {
+            for (int j = 0; j < width; j++) {
+                if (i < height / 2 - CENTER_SIZE / 2 ||
+                        i > height / 2 + CENTER_SIZE / 2 ||
+                        j < width / 2 - CENTER_SIZE / 2 ||
+                        j > width / 2 + CENTER_SIZE / 2) {
+                    image[i][j] = 0;
+                }
+            }
+        }
+        return processMap(image);
     }
 }

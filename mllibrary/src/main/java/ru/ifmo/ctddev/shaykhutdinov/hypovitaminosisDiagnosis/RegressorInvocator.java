@@ -65,7 +65,7 @@ public class RegressorInvocator implements Model {
     public double getResult(InputStream is) throws Exception {
         BufferedImage image = ImageIO.read(is);
         Instance ins = new DenseInstance(6);
-        double[] features = ImageProcessor.processMono(image);
+        double[] features = ImageProcessor.processCenterMono(image);
         ArrayList<Attribute> atts = new ArrayList<>();
         atts.add(i.attribute(0));
         for (int j = 1; j < 6; j++) {
