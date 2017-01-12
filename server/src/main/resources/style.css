@@ -1,7 +1,22 @@
 body {
-  padding-top: 50px;
+  padding-top: 0px;
 }
-.starter-template {
-  padding: 40px 15px;
+.style {
+  padding: 30px;
   text-align: center;
+}
+.photo {
+  padding: 5px;
+  text-align: center;
+}
+img {
+  max-width: 100%;
+  max-height: 100%;
+}
+.windowCutter {
+  position: absolute;
+  left: 448px;
+  top: 112px;
+  height: 388px;
+  width: 500px;
 }
