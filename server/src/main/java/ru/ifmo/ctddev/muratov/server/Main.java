@@ -15,20 +15,16 @@ import java.io.File;
 public class Main {
     public static void main(String[] args) throws Exception {
 
-        File dir = new File("server/src/main/resources/photos");
+        File dir = new File(StaticMembers.SERVER_FILES_PATH + "/photos");
         if (dir.exists()) {
             FileUtils.cleanDirectory(dir);
-        }
-        File dir2 = new File("server/target/classes/photos");
-        if (dir2.exists()) {
-            FileUtils.cleanDirectory(dir2);
         }
         Server server = new Server(8081);
 
         HandlerCollection handlers = new HandlerCollection();
 
         WebAppContext context = new WebAppContext();
-        context.setResourceBase("server/src/main/resources");
+        context.setResourceBase(StaticMembers.SERVER_FILES_PATH);
         context.setContextPath("/");
         //context.setDefaultsDescriptor("server/src/main/webdefault/webdefault.xml");
 

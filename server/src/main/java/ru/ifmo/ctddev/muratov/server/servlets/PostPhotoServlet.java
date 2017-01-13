@@ -23,7 +23,7 @@ import java.util.List;
  */
 public class PostPhotoServlet extends HttpServlet {
     private int photoId = 0;
-    private static final String PHOTO_URL = "server/src/main/resources/photos/photo%d.jpeg";
+    private static final String PHOTO_URL = StaticMembers.SERVER_FILES_PATH + "/photos/photo%d.jpeg";
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

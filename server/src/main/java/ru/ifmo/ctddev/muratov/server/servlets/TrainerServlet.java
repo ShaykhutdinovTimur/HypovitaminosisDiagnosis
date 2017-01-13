@@ -2,34 +2,28 @@ package ru.ifmo.ctddev.muratov.server.servlets;
 
 import ru.ifmo.ctddev.muratov.server.StaticMembers;
 
-import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 /**
  * @author amir.
  */
 public class TrainerServlet extends HttpServlet {
-    private static final String PHOTO_URL = "server/src/main/resources/photos/%s";
+    private static final String PHOTO_URL = StaticMembers.SERVER_FILES_PATH + "/photos/%s";
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        List<String> photos = getFiles("server/src/main/resources/photos");
+        List<String> photos = getFiles(StaticMembers.SERVER_FILES_PATH + "/photos");
         request.getSession().setAttribute("photos", photos);
         getServletContext().getRequestDispatcher("/train.jsp").forward(request, response);
     }
