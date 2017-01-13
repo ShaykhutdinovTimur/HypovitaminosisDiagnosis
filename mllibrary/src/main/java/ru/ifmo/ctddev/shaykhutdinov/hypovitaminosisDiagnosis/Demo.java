@@ -31,6 +31,9 @@ public class Demo extends JPanel implements ActionListener {
         fc = new JFileChooser();
 
         openButton = new JButton("Open a File...");
+        fc.setCurrentDirectory(
+                new File("/home/lightning95/studies/software-design/cp-hp-diag/HypovitaminosisDiagnosis/server/src/main/resources/photos"));
+
         openButton.addActionListener(this);
         JPanel buttonPanel = new JPanel();
         buttonPanel.add(openButton);
@@ -43,7 +46,27 @@ public class Demo extends JPanel implements ActionListener {
     private static void createAndShowGUI() {
         JFrame frame = new JFrame("FileChooserDemo");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
         frame.add(new Demo());
+        Dimension dim = new Dimension((int) Toolkit.getDefaultToolkit().getScreenSize().getWidth() / 5, Toolkit.getDefaultToolkit().getScreenSize().height);
+        frame.setSize(dim);
+
+        frame.pack();
+        frame.setVisible(true);
+    }
+
+    private static void showImage(File file) {
+        JFrame frame = new JFrame("Image");
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+        Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
+
+
+        JLabel label = new JLabel(new ImageIcon(file.getAbsolutePath()));
+        frame.add(label);
+
+        frame.setLocation(dim.width / 2 - label.getIcon().getIconWidth() / 2, dim.height / 2 - label.getIcon().getIconHeight() / 2);
+
         frame.pack();
         frame.setVisible(true);
     }
@@ -67,6 +90,7 @@ public class Demo extends JPanel implements ActionListener {
                 try {
                     Instance ins = new DenseInstance(6);
                     BufferedImage bu = ImageIO.read(file);
+                    showImage(file);
                     double[] hihi = ImageProcessor.processMono(bu);
                     ArrayList<Attribute> atts = new ArrayList<>();
                     atts.add(reg.i.attribute(0));

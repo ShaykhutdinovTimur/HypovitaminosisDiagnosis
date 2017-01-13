@@ -28,6 +28,7 @@ public class PostPhotoServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         double result = 0;
+        String photoUrl = "";
         try {
             List<FileItem> items = new ServletFileUpload(new DiskFileItemFactory()).parseRequest(request);
             for (FileItem item : items) {
@@ -44,8 +45,10 @@ public class PostPhotoServlet extends HttpServlet {
                     String photo = String.format(PHOTO_URL, photoId++);
                     IOUtils.copy(fileContent, new FileOutputStream(photo));
                     result = StaticMembers.ImageHandler.getResult(new FileInputStream(photo));
+                    photoUrl = photo;
                 }
             }
+
         } catch (FileUploadException e) {
             throw new ServletException("Cannot parse multipart request.", e);
         } catch (Exception e) {
@@ -55,6 +58,10 @@ public class PostPhotoServlet extends HttpServlet {
         response.setStatus(HttpServletResponse.SC_OK);
         response.getWriter().println(String.format("Your result is %.5f", result));
         response.getWriter().println("Diagnosis: " + interpret(result));
+        if (!photoUrl.equals(""))
+            response.getWriter().println(photoUrl.substring(photoUrl.indexOf("p")));
+        else
+            System.err.println("nope");
     }
 
     private static String interpret(double fissureResult) {

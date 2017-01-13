@@ -12,7 +12,7 @@
 <body>
 
 <div class="windowCutter">
-    <img src="windowCutter.png" />
+    <img src="windowCutter.png"/>
 </div>
 <div class="container">
     <div class="style">
@@ -20,12 +20,22 @@
 
         <div class="container" id="my_camera" style="width:500px; height:400px;"></div>
         <a href="javascript:void(take_snapshot())">Take Snapshot</a>
-        <h2><div id="interpretation"></div></h2>
+        <h2>
+            <div id="interpretation"></div>
+        </h2>
         <br>
         <div id="my_result"></div>
     </div>
 </div>
+<div class="history">
+    <div class="style">
+        <div id="txt">
+            <h1>Latest snapshot</h1>
+        </div>
 
+        <IMG id="last" SRC="" ALT="a picture, duh" WIDTH=300 HEIGHT=200>
+    </div>
+</div>
 
 <script src="webcam.js"></script>
 <script language="JavaScript">
@@ -41,10 +51,15 @@
                     parsed = text.split("\n")
                     document.getElementById('my_result').innerHTML = parsed[0];
                     document.getElementById('interpretation').innerHTML = parsed[1];
+                    document.getElementById('last').src = parsed[2];
+                    document.getElementById('txt').innerHTML = parsed[2];
                 } );
+            } );
+        }
 
-    } );
-    }
+
+
+
 </script>
 
 <script src="/webjars/jquery/1.11.1/jquery.min.js"></script>
