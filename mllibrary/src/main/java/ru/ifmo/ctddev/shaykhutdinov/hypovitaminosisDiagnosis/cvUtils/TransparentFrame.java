@@ -1,7 +1,5 @@
 package ru.ifmo.ctddev.shaykhutdinov.hypovitaminosisDiagnosis.cvUtils;
 
-import ru.ifmo.ctddev.shaykhutdinov.hypovitaminosisDiagnosis.ImageProcessor;
-
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -19,7 +17,7 @@ public class TransparentFrame {
             Graphics2D g2 = dest.createGraphics();
             g2.setPaint(new Color(0, 0, 0, 0));
             g2.fillRect(0, 0, width, height);
-            g2.setPaint(new Color(255, 255, 255, 190));
+            g2.setPaint(new Color(255, 255, 255, 40));
             g2.fillRect(centerX - size, centerY - size, size * 2, frameWidth);
             g2.fillRect(centerX - size, centerY - size, frameWidth, size * 2);
             g2.fillRect(centerX + size - frameWidth, centerY - size,

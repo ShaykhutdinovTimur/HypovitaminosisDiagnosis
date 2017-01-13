@@ -183,7 +183,7 @@ public class ImageProcessor {
         int max;
         int deepSquaresSum = 0;
         max = 0;
-        double lim = objectCellsCount * 0.000125;
+        double lim = objectCellsCount * 0.001;
         for (int i = 0; i < height; i++) {
             for (int j = 0; j < width; j++) {
                 if (image[i][j] == 0) {
